@@ -3,15 +3,21 @@ using Telegram.Bot.Types;
 
 namespace TelegramMyFirstBot.Model.Commands
 {
-    public  abstract class Command
+    public abstract class Command
     {
-        public abstract string Name { get; }
+        public abstract string []  Name { get; }
 
         public abstract void Execute(Message message, TelegramBotClient client);
 
         public bool Contains(string command)
         {
-            return command.Contains(this.Name) && command.Contains(AppSettings.Name);
+            foreach (var commandName in this.Name)
+            {
+                if (command.Contains(commandName.ToLower()))
+                    return true;
+            }
+            return false;
+            
         }
     }
 }
