@@ -13,6 +13,7 @@ namespace TelegramMyFirstBot.Model
         {
             try
             {
+                nameOfCity = city;
                 string url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&unit=metric&appid=2351aaee5394613fc0d14424239de2bd";
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();
@@ -35,7 +36,9 @@ namespace TelegramMyFirstBot.Model
         }
         public string WeatherAnswer() 
         {
-
+            if (tempOfCity <= 0.0)
+                return $"Нет такого города \"{nameOfCity}\" ";
+            else
             if (tempOfCity <= 10)
                 return $"{tempOfCity:F1} °C Сегодня в {nameOfCity} холодно одевайся потеплее!";
             else

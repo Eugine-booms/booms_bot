@@ -21,7 +21,7 @@ namespace TelegramMyFirstBot.Model.Commands
             }
             else
             {
-                await client.SendTextMessageAsync(chatId, "Пиши \"погода город\"", replyToMessageId: messageId);
+                await client.SendTextMessageAsync(chatId, "Пиши \"/погода город\"", replyToMessageId: messageId);
             }
             
            
