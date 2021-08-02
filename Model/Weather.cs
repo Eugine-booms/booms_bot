@@ -13,7 +13,7 @@ namespace TelegramMyFirstBot.Model
         {
             try
             {
-                nameOfCity = city;
+                
                 string url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&unit=metric&appid=2351aaee5394613fc0d14424239de2bd";
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();
@@ -30,6 +30,8 @@ namespace TelegramMyFirstBot.Model
             }
             catch (System.Net.WebException)
             {
+                nameOfCity = city;
+                tempOfCity = (float) 0.0;
                 Console.WriteLine("Возникло исключение класс Weather");
                 return;
             }
