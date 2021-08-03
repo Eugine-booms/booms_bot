@@ -21,11 +21,6 @@ namespace TelegramMyFirstBot.Model.Commands
             {
                 var message = e.Message;
                 Console.WriteLine($"[log]: Пришло сообщение типа {e.Message.Type} от : {message.From.FirstName} с текстом {message.Text}");
-
-                if (message.Text != null)
-
-                    await Bot.client.SendTextMessageAsync(message.Chat.Id, message.Text, replyMarkup: GetButtons());
-
                 foreach (var command in commandsList)
                 {
                     if (message.Text != null && command.Contains(message.Text.ToLower()))
@@ -34,30 +29,40 @@ namespace TelegramMyFirstBot.Model.Commands
                         break;
                     }
                 }
-                
-            }
 
+                //if (message.Text != null)
+                //    await Bot.client.SendTextMessageAsync(message.Chat.Id, message.Text, replyMarkup: GetButtons());
+            }
             catch (Exception)
             {
-               
                 Console.WriteLine("[err]Возникло исключение сообщение боту");
-                
             }
         
         }
-
         public static IReplyMarkup GetButtons()
         {
             return new ReplyKeyboardMarkup
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = "Привет" }, new KeyboardButton { Text = "Погода" } },
-                    new List<KeyboardButton> { new KeyboardButton { Text = "Стикер" }, new KeyboardButton { Text = "Картинка" } }
+                    new List<KeyboardButton> { new KeyboardButton { Text = "Привет" }, new KeyboardButton { Text = "/Погода" }, 
+                        new KeyboardButton { Text = "Стикер" }, new KeyboardButton { Text = "Картинка" } }
+                     
                 }
             };
         }
-
+        public static IReplyMarkup GetButtons(string [] buttonText)
+        {
+            var buttonList =new List<KeyboardButton>();
+            var keyboardMarkup = new ReplyKeyboardMarkup();
+            foreach (var text in buttonText)
+            {
+                buttonList.Add(new KeyboardButton { Text = text });
+            }
+            keyboardMarkup.Keyboard = new List<List<KeyboardButton>> { buttonList };
+            return keyboardMarkup;
+           
+        }
         public static void Init()
         {
             client = new TelegramBotClient(AppSettings.Key) {Timeout = TimeSpan.FromSeconds(10) };
