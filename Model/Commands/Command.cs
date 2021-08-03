@@ -7,7 +7,7 @@ namespace TelegramMyFirstBot.Model.Commands
     {
         public abstract string []  Name { get; }
 
-        public abstract void Execute(Message message, TelegramBotClient client);
+        public abstract  void Execute(Message message, TelegramBotClient client);
 
         public bool Contains(string command)
         {

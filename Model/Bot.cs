@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types.ReplyMarkups;
 using TelegramMyFirstBot.Model.Commands;
 
 namespace TelegramMyFirstBot.Model.Commands
@@ -16,17 +17,45 @@ namespace TelegramMyFirstBot.Model.Commands
         public static TelegramBotClient GetClient() => client;
         public static async void OnMessageHandler(object sender, MessageEventArgs e)
         {
-            var message = e.Message;
-            Console.WriteLine($"[log]: Пришло сообщение от : {message.From.FirstName} с текстом {message.Text}");
-          
-            foreach (var command in commandsList)
+            try
             {
-                if (message.Text!= null && command.Contains(message.Text.ToLower()))
+                var message = e.Message;
+                Console.WriteLine($"[log]: Пришло сообщение типа {e.Message.Type} от : {message.From.FirstName} с текстом {message.Text}");
+
+                if (message.Text != null)
+
+                    await Bot.client.SendTextMessageAsync(message.Chat.Id, message.Text, replyMarkup: GetButtons());
+
+                foreach (var command in commandsList)
                 {
-                    command.Execute(message, client);
-                    break;
+                    if (message.Text != null && command.Contains(message.Text.ToLower()))
+                    {
+                        command.Execute(message, client);
+                        break;
+                    }
                 }
+                
             }
+
+            catch (Exception)
+            {
+               
+                Console.WriteLine("[err]Возникло исключение сообщение боту");
+                
+            }
+        
+        }
+
+        public static IReplyMarkup GetButtons()
+        {
+            return new ReplyKeyboardMarkup
+            {
+                Keyboard = new List<List<KeyboardButton>>
+                {
+                    new List<KeyboardButton> { new KeyboardButton { Text = "Привет" }, new KeyboardButton { Text = "Погода" } },
+                    new List<KeyboardButton> { new KeyboardButton { Text = "Стикер" }, new KeyboardButton { Text = "Картинка" } }
+                }
+            };
         }
 
         public static void Init()
@@ -37,6 +66,8 @@ namespace TelegramMyFirstBot.Model.Commands
             commandsList = new List<Command>();
             commandsList.Add(new HelloComand());
             commandsList.Add(new WeatherCommand());
+            commandsList.Add(new StickerCommand());
+            commandsList.Add(new ImageCommand());
             //TODO: Add more commands
         }    
     }
