@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
 using TelegramMyFirstBot.Model.Commands;
+using TelegramMyFirstBot.Model.Weather;
 
 namespace TelegramMyFirstBot.Model.Conversations
 
@@ -17,6 +18,7 @@ namespace TelegramMyFirstBot.Model.Conversations
             var step = 1;
             var userAnswer = new List<string>();
             int request = 0;
+            WeatherInCity weather= new WeatherNow();
 
             var mre = new ManualResetEvent(false);
 
@@ -40,12 +42,14 @@ namespace TelegramMyFirstBot.Model.Conversations
                         step++;
                         request = 1;
                         Bot.GetClient().SendTextMessageAsync(msg.Chat.Id, "В каком городе?", replyMarkup: null);
+                        weather = new WeatherNow();
                     } else if (e.Message.Text == "Hourly Forecast 4 days")
                     {
                         userAnswer.Add(e.Message.Text);
                         step++;
                         request = 4;
                         Bot.GetClient().SendTextMessageAsync(msg.Chat.Id, "В каком городе?", replyMarkup: null);
+                        weather = new Weather4Day();
 
                     } else if (e.Message.Text == "Daily Forecast 16 days")
                     {
@@ -53,6 +57,7 @@ namespace TelegramMyFirstBot.Model.Conversations
                         step++;
                         Bot.GetClient().SendTextMessageAsync(msg.Chat.Id, "В каком городе?", replyMarkup: null);
                         request = 16;
+                        weather= new Weather16Day();
                     } 
                     else
                     {
@@ -77,7 +82,7 @@ namespace TelegramMyFirstBot.Model.Conversations
                     {
                         userAnswer.Add(e.Message.Text);
                         step++;
-                        var weather = new WeatherInCity(e.Message.Text, request);
+                        weather = weather.WeatherInTheCity(e.Message.Text);
                         Bot.GetClient().SendTextMessageAsync(msg.Chat.Id, weather.WeatherAnswer(),replyMarkup: Bot.GetButtons());
                     }
                     else
@@ -99,21 +104,21 @@ namespace TelegramMyFirstBot.Model.Conversations
         }
     }
 
-    public static class ListStringExtensions
-    {
-        public static string GetRandom(this List<string> list)
-        {
-            var max = list.Count;
-            var rnd = new Random();
-            var rndNmb = rnd.Next(0, max);
-            return list[rndNmb];
-        }
+    //public static class ListStringExtensions
+    //{
+    //    public static string GetRandom(this List<string> list)
+    //    {
+    //        var max = list.Count;
+    //        var rnd = new Random();
+    //        var rndNmb = rnd.Next(0, max);
+    //        return list[rndNmb];
+    //    }
 
-        public static bool IsInt(this string s)
-        {
-            var x = 0;
-            return int.TryParse(s, out x);
-        }
+    //    public static bool IsInt(this string s)
+    //    {
+    //        var x = 0;
+    //        return int.TryParse(s, out x);
+    //    }
 
-    }
+    //}
 }

@@ -1,6 +1,6 @@
 ﻿namespace TelegramMyFirstBot.Model
 {
-    internal class WeatherResponse
+    public  class WeatherResponse
     {
         public TemperatureInfo Main { get; set; }
         public CloudInfo [] Weather { get; set; }

@@ -14,7 +14,7 @@ namespace TelegramMyFirstBot.Model.Commands
         {
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
-            var conversations = new WeatherConversation();
+            //var conversations = new WeatherConversation();
             await WeatherConversation.StarWeatherUserDialogAsync(message);
         }
     }

@@ -61,7 +61,6 @@ namespace TelegramMyFirstBot.Model.Commands
             }
             keyboardMarkup.Keyboard = new List<List<KeyboardButton>> { buttonList };
             return keyboardMarkup;
-           
         }
         public static void Init()
         {
