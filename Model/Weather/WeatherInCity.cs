@@ -9,7 +9,7 @@ namespace TelegramMyFirstBot.Model
     {
         WeatherResponse weather;
         string exception=string.Empty;
-        public WeatherInCity (string city)
+        public WeatherInCity (string city, int request)
         {
             try
             {

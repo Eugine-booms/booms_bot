@@ -19,8 +19,11 @@ namespace TelegramMyFirstBot.Model.Commands
         {
             try
             {
+
                 var message = e.Message;
                 Console.WriteLine($"[log]: Пришло сообщение типа {e.Message.Type} от : {message.From.FirstName} с текстом {message.Text}");
+
+
                 foreach (var command in commandsList)
                 {
                     if (message.Text != null && command.Contains(message.Text.ToLower()))
@@ -29,7 +32,6 @@ namespace TelegramMyFirstBot.Model.Commands
                         break;
                     }
                 }
-
                 //if (message.Text != null)
                 //    await Bot.client.SendTextMessageAsync(message.Chat.Id, message.Text, replyMarkup: GetButtons());
             }
@@ -37,7 +39,6 @@ namespace TelegramMyFirstBot.Model.Commands
             {
                 Console.WriteLine("[err]Возникло исключение сообщение боту");
             }
-        
         }
         public static IReplyMarkup GetButtons()
         {
@@ -45,9 +46,8 @@ namespace TelegramMyFirstBot.Model.Commands
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton> { new KeyboardButton { Text = "Привет" }, new KeyboardButton { Text = "/Погода" }, 
-                        new KeyboardButton { Text = "Стикер" }, new KeyboardButton { Text = "Картинка" } }
-                     
+                    new List<KeyboardButton> { new KeyboardButton { Text = "Привет" }, new KeyboardButton { Text = "/Погода" }}, 
+                    new List<KeyboardButton> { new KeyboardButton { Text = "Стикер" }, new KeyboardButton { Text = "Картинка" }}
                 }
             };
         }
