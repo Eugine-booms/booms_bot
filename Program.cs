@@ -10,11 +10,10 @@ namespace TelegramMyFirstBot
         static void Main(string[] args)
         {
             Bot.Init();
-            var client = Bot.GetClient();
-            client.StartReceiving();   // начинаем слушать входящие сообщения
-            client.OnMessage += Bot.OnMessageHandler;
+            Bot.Client.StartReceiving();   // начинаем слушать входящие сообщения
+            Bot.Client.OnMessage += Bot.OnMessageHandler;
             Console.ReadLine();
-            client.StopReceiving();
+            Bot.Client.StopReceiving();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace TelegramMyFirstBot.Model.Commands
                chatId: message.Chat.Id,
                photo: "https://static7.depositphotos.com/1219281/708/i/950/depositphotos_7082441-stock-photo-beautiful-sunset-on-the-beach.jpg",
                replyToMessageId: message.MessageId,
-               replyMarkup: Bot.GetButtons());
+               replyMarkup: Bot.ReturnStartSetOfButtons());
         }
     }
 }

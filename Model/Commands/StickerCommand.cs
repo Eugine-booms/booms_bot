@@ -18,7 +18,7 @@ namespace TelegramMyFirstBot.Model.Commands
                 chatId: message.Chat.Id,
                 sticker: "https://cdn.tlgrm.ru/stickers/dc7/a36/dc7a3659-1457-4506-9294-0d28f529bb0a/192/1.webp",
                 replyToMessageId: message.MessageId,
-                replyMarkup: Bot.GetButtons());
+                replyMarkup: Bot.ReturnStartSetOfButtons());
         }
     }
 }
