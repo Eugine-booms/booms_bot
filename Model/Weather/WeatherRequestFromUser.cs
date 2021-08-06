@@ -89,12 +89,12 @@ namespace TelegramMyFirstBot.Model
         }
     }
 }
-public class WebRequest
+public class RequestToWeatherSerwer
 {
-    protected string url = string.Empty;
+    protected string url { get; set; } = string.Empty;
     protected const string apiID = "2351aaee5394613fc0d14424239de2bd";
     protected string ServerAnswer { get; set; }
-    protected string SendDataRequestToServer()
+    protected string SendDataRequestToServer(string url)
     {
         if (string.IsNullOrEmpty(url)) throw new ArgumentException();
         string response;
@@ -115,6 +115,4 @@ public class WebRequest
         ServerAnswer = response;
         return "Ok";
     }
-
-
 }
