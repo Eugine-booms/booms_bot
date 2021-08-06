@@ -23,6 +23,7 @@ namespace TelegramMyFirstBot.Model.Commands
         public static async void OnMessageHandler(object sender, MessageEventArgs incoming)
         {
             LogMessage(incoming);
+            
             if (incoming.Message.Text == null || incoming.Message.Text == string.Empty)
                 return;
             try
@@ -54,20 +55,21 @@ namespace TelegramMyFirstBot.Model.Commands
         public static IReplyMarkup ReturnSetOfButtonsWithTextParam(string[] buttonText)
         {
             var buttonList = new List<KeyboardButton>();
-            var keyboardMarkup = new ReplyKeyboardMarkup();
+            
             foreach (var text in buttonText)
             {
                 buttonList.Add(new KeyboardButton { Text = text });
             }
-            keyboardMarkup.Keyboard = new List<List<KeyboardButton>> { buttonList };
-            return keyboardMarkup;
+            //return new ReplyKeyboardMarkup(new List<List<KeyboardButton>> { buttonList }, resizeKeyboard: true, oneTimeKeyboard: false); 
+            var  ReplyKeyboard = new ReplyKeyboardMarkup();
+            ReplyKeyboard= buttonText;
+            return ReplyKeyboard;
         }
         public static void Init()
         {
             Client = new TelegramBotClient(AppSettings.Key) { Timeout = TimeSpan.FromSeconds(10) };
             var me = Client.GetMeAsync().Result;
             Console.WriteLine($"BotID: { me.Id}\n BotName:{me.FirstName}");
-           // Bot.Client.ke ReplyKeyboardMarkup : Bot.ReturnStartSetOfButtons());
             commandsList = new List<Command>();
             commandsList.Add(new HelloComand());
             commandsList.Add(new WeatherCommand());

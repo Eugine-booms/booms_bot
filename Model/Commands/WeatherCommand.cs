@@ -10,11 +10,14 @@ namespace TelegramMyFirstBot.Model.Commands
 
         public override async void Execute(Message message, TelegramBotClient client)
         {
-            //var chatId = message.Chat.Id;
-            //var messageId = message.MessageId;
-            WeatherConversation a=new WeatherConversation();
+            var chatId = message.Chat.Id;
+            var messageId = message.MessageId;
+            WeatherRequestFromUser weatherRequest=new WeatherRequestFromUser(message.Chat.Id, message.From.Username);
+
+            
             await a.StarWeatherUserDialogAsync(message);
             //Bot.Client.OnMessage -=mHandler;
         }
+
     }
 }

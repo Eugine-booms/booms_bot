@@ -5,7 +5,7 @@ using System.Net;
 
 namespace TelegramMyFirstBot.Model.Weather
 {
-    class Weather4Day : WeatherInCity
+    class Weather4Day : WeatherRequestFromUser
     {
         public override WeatherResponse Weather { get; set; }
 
@@ -27,7 +27,7 @@ namespace TelegramMyFirstBot.Model.Weather
             else return "я чет не понял"; throw new NotImplementedException();
         }
 
-        public override WeatherInCity WeatherInTheCity(string city)
+        public override WeatherRequestFromUser WeatherInTheCity(string city)
         {
             try
             {

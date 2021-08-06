@@ -5,7 +5,7 @@ using System.Net;
 
 namespace TelegramMyFirstBot.Model.Weather
 {
-    class WeatherNow : WeatherInCity
+    class WeatherNow : WeatherRequestFromUser
     {
         public override WeatherResponse Weather { get; set; }
         public override string WeatherAnswer()
@@ -25,15 +25,13 @@ namespace TelegramMyFirstBot.Model.Weather
             }
             else return "я чет не понял";
         }
-        public override WeatherInCity WeatherInTheCity(string city)
+        public override WeatherRequestFromUser WeatherInTheCity(string city)
         {
             try
             {
                 string apiID = "2351aaee5394613fc0d14424239de2bd";
                 string url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&lang=ru&appid=" + apiID;
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();
-                string response;
+               
 
                 using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
                 {

@@ -6,7 +6,7 @@ using TelegramMyFirstBot.Model.Weather;
 
 namespace TelegramMyFirstBot.Model.Conversations
 {
-    internal class Weather16Day : WeatherInCity
+    internal class Weather16Day : WeatherRequestFromUser
     {
         public override WeatherResponse Weather { get; set; }
         public WeatherResponse16  Weathers { get; set; }
@@ -23,7 +23,7 @@ namespace TelegramMyFirstBot.Model.Conversations
             return answer;
         }
 
-        public override WeatherInCity WeatherInTheCity(string city)
+        public override WeatherRequestFromUser WeatherInTheCity(string city)
         {
             try
             {
