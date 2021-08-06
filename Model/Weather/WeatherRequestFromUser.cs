@@ -1,20 +1,20 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using TelegramMyFirstBot.Model.Commands;
+using TelegramMyFirstBot.Model.Weather;
 
 namespace TelegramMyFirstBot.Model
 {
     public  class WeatherRequestFromUser
     {
-        private  WebRequest ;
+
+        Dictionary<string, string> requestParam; 
+        private RequestToWeatherSerwer requestSerwer ;
         public ChatId ChatId    { get; set; }
         public string Username  { get; set; }
         protected string WeatherTypeSelection { get; set; }
@@ -23,13 +23,16 @@ namespace TelegramMyFirstBot.Model
         {
             this.ChatId = chatID;
             this.Username = username;
+            requestParam = new Dictionary<string, string>(3);
+            requestParam.Add("сейчас", "&units=metric&lang=ru&appid=");
+
         }
-        public abstract string WeatherAnswer();
+        public string CreateWeatherAnswer() { }
         private void AnswerToUser()
         {
-            Bot.Client.SendTextMessageAsync(ChatId, WeatherAnswer(), replyMarkup: Bot.ReturnStartSetOfButtons());
+            Bot.Client.SendTextMessageAsync(ChatId, CreateWeatherAnswer(), replyMarkup: Bot.ReturnStartSetOfButtons());
         }
-        protected abstract string CreationDataRequest();
+        
         public async Task StarWeatherUserDialogAsync(Message msg)
         {
             var mre = new ManualResetEvent(false);
@@ -87,32 +90,5 @@ namespace TelegramMyFirstBot.Model
             mre.WaitOne();
             Bot.Client.OnMessage -= mHandler;
         }
-    }
-}
-public class RequestToWeatherSerwer
-{
-    protected string url { get; set; } = string.Empty;
-    protected const string apiID = "2351aaee5394613fc0d14424239de2bd";
-    protected string ServerAnswer { get; set; }
-    protected string SendDataRequestToServer(string url)
-    {
-        if (string.IsNullOrEmpty(url)) throw new ArgumentException();
-        string response;
-        try
-        {
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest?.GetResponse();
-            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-            {
-                response = streamReader.ReadToEnd();
-            }
-        }
-        catch (System.Net.WebException)
-        {
-            Console.WriteLine("Возникло исключение класс Weather");
-            return "ошибка интернета";
-        }
-        ServerAnswer = response;
-        return "Ok";
     }
 }
