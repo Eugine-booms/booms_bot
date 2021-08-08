@@ -1,6 +1,5 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using TelegramMyFirstBot.Model.Conversations;
 
 namespace TelegramMyFirstBot.Model.Commands
 {
@@ -13,10 +12,7 @@ namespace TelegramMyFirstBot.Model.Commands
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
             WeatherRequestFromUser weatherRequest=new WeatherRequestFromUser(message.Chat.Id, message.From.Username);
-
-            
-            await a.StarWeatherUserDialogAsync(message);
-            //Bot.Client.OnMessage -=mHandler;
+            await weatherRequest.StarWeatherUserDialogAsync(message);
         }
 
     }
