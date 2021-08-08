@@ -14,7 +14,7 @@ namespace TelegramMyFirstBot.Model
 {
     public  class WeatherRequestFromUser
     {
-
+        int step = 0;
         private RequestToWeatherSerwer requestSerwer;
         public ChatId ChatId    { get; set; }
         public string Username  { get; set; }
@@ -28,8 +28,9 @@ namespace TelegramMyFirstBot.Model
         }
         public string CreateWeatherAnswer()
         {
-            var a1= requestSerwer.CreationDataRequestWithParam(WeatherCitySelection, WeatherTypeSelection);
-            if (requestSerwer.SendDataRequestToServer(requestSerwer.CreationDataRequestWithParam(WeatherCitySelection, WeatherTypeSelection)) != "Ok")
+            var request= requestSerwer.CreationDataRequestWithParam(WeatherCitySelection, WeatherTypeSelection);
+            var isRequestOk = requestSerwer.SendDataRequestToServer(requestSerwer.CreationDataRequestWithParam(WeatherCitySelection, WeatherTypeSelection));
+            if (isRequestOk != "Ok")
                 return "Ошибка запроса на сервер";
             string serverAnswerString = requestSerwer.GetServerAnswer();
             IWeatherParser weather;
@@ -53,58 +54,51 @@ namespace TelegramMyFirstBot.Model
         {
             Bot.Client.SendTextMessageAsync(ChatId, CreateWeatherAnswer(), replyMarkup: Bot.ReturnStartSetOfButtons());
         }
-        public async Task StarWeatherUserDialogAsync(Message msg)
+        public async Task WeatherUserDialogAsync(Message msg)
         {
-            //var mre = new ManualResetEvent(false);
-            int step = 1;
-            EventHandler<MessageEventArgs> mHandler = (sender, e) =>
+
+           
+                if (this.Username != msg.From.Username) return;
+                if (this.ChatId != msg.Chat.Id) return;
+                if(step==0)
             {
-                if (this.Username != e.Message.From.Username) return;
-                if (msg.From.Id != e.Message.From.Id) return;
-                if (this.ChatId != e.Message.Chat.Id) return;
+                await Bot.Client.SendTextMessageAsync(ChatId, $"Какую погоду ды хочешь узнать?", replyToMessageId: msg.MessageId,  replyMarkup: Bot.ReturnSetOfButtonsWithTextParam(new string[] { "Сейчас", "16 days" }));
+                step++;
+            }
                 else if (step == 1)
                 {
-                    if (e.Message.Text == "Сейчас")
+                    if (msg.Text == "Сейчас")
                     {
                         WeatherTypeSelection = "Сейчас";
                         step++;
-                        Bot.Client.SendTextMessageAsync(msg.Chat.Id, "В каком городе?", replyMarkup: new ReplyKeyboardRemove());
+                    await Bot.Client.SendTextMessageAsync(ChatId, "В каком городе?", replyToMessageId: msg.MessageId, replyMarkup: new ReplyKeyboardRemove());
                     }
-                    else if (e.Message.Text == "Daily Forecast 16 days")
+                    else if (msg.Text == "Daily Forecast 16 days")
                     {
                         WeatherTypeSelection = "16 days";
                         step++;
-                        Bot.Client.SendTextMessageAsync(msg.Chat.Id, "В каком городе?", replyMarkup: new ReplyKeyboardRemove());
+                    await Bot.Client.SendTextMessageAsync(ChatId, "В каком городе?", replyToMessageId: msg.MessageId, replyMarkup: new ReplyKeyboardRemove());
                     }
                     else
                     {
-                        Bot.Client.SendTextMessageAsync(msg.Chat.Id, "Нажми на кнопку!");
+                    await Bot.Client.SendTextMessageAsync(ChatId, "Нажми на кнопку!", replyToMessageId: msg.MessageId);
                         return;
                     }
                 }
                 else if (step == 2)
                 {
-                    if (!string.IsNullOrEmpty(e.Message.Text))
+                    if (!string.IsNullOrEmpty(msg.Text))
                     {
                         step++;
-                        WeatherCitySelection= e.Message.Text;
+                        WeatherCitySelection= msg.Text;
                         AnswerToUser();
-                        //Bot.Client.SendTextMessageAsync(msg.Chat.Id, weather.WeatherAnswer(), replyMarkup: Bot.ReturnStartSetOfButtons());
-                       // mre.Set();
-
+                    Bot.userRequests.Remove(this);
                     }
                     else
                     {
-                        Bot.Client.SendTextMessageAsync(msg.Chat.Id, "Я все еще жду город?");
+                    await Bot.Client.SendTextMessageAsync(ChatId, "Я все еще жду город?", replyToMessageId: msg.MessageId);
                     }
                 }
-            };
-            await Bot.Client.SendTextMessageAsync(msg.Chat.Id, $"Какую погоду ды хочешь узнать?", replyMarkup: Bot.ReturnSetOfButtonsWithTextParam(new string[] { "Сейчас", "16 days" }));
-            if (step == 1)
-            Bot.Client.OnMessage += mHandler;
-          //  mre.WaitOne();
-          if (step==2)
-            Bot.Client.OnMessage -= mHandler;
         }
     }
 }

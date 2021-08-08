@@ -11,8 +11,10 @@ namespace TelegramMyFirstBot.Model.Commands
         {
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
+
             WeatherRequestFromUser weatherRequest=new WeatherRequestFromUser(message.Chat.Id, message.From.Username);
-            await weatherRequest.StarWeatherUserDialogAsync(message);
+            Bot.userRequests.Add(weatherRequest);
+           // await weatherRequest.WeatherUserDialogAsync(message);
         }
 
     }

@@ -12,6 +12,7 @@ namespace TelegramMyFirstBot.Model.Commands
 {
     public static class Bot
     {
+        public static List<WeatherRequestFromUser> userRequests = new List<WeatherRequestFromUser>();
         public static TelegramBotClient Client { get; private set; }
         private static List<Command> commandsList;
         public static IReadOnlyList<Command> Commands => commandsList.AsReadOnly();
@@ -34,6 +35,14 @@ namespace TelegramMyFirstBot.Model.Commands
                         command.Execute(incoming.Message, Client);
                         break;
                     }
+                }
+                if (userRequests.Count != 0)
+                {
+                    foreach(var temp in userRequests)
+                    {
+                      await temp.WeatherUserDialogAsync(incoming.Message);
+                    }
+                    
                 }
             }
             catch (Exception)
