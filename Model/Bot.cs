@@ -1,18 +1,20 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.ReplyMarkups;
-using TelegramMyFirstBot.Model.Commands;
+using System.Threading.Tasks;
+using Telegram.Bot.Types;
+using System.Threading;
+using Telegram.Bot.Exceptions;
 
 namespace TelegramMyFirstBot.Model.Commands
 {
     public static class Bot
     {
         public static List<WeatherRequestFromUser> userRequests = new List<WeatherRequestFromUser>();
+        
         public static TelegramBotClient Client { get; private set; }
         private static List<Command> commandsList;
         public static IReadOnlyList<Command> Commands => commandsList.AsReadOnly();
@@ -68,7 +70,7 @@ namespace TelegramMyFirstBot.Model.Commands
             {
                 buttonList.Add(new KeyboardButton { Text = text });
             }
-            return new ReplyKeyboardMarkup(new List<List<KeyboardButton>> { buttonList }, resizeKeyboard: true, oneTimeKeyboard: false); 
+            return new ReplyKeyboardMarkup(new List<List<KeyboardButton>> { buttonList },  resizeKeyboard: true, oneTimeKeyboard: true); 
         }
         public static void Init()
         {
@@ -91,5 +93,22 @@ namespace TelegramMyFirstBot.Model.Commands
             //List<string> Json_Array = JsonConvert.DeserializeObject<List<string>>(jsonText);
             //string a= "{\"coord\":{\"lon\":61.4297,\"lat\":55.1544},\"weather\":[{\"id\":802,\"main\":\"Clouds\",\"description\":\"переменная облачность\",\"icon\":\"03n\"}],\"base\":\"stations\",\"main\":{\"temp\":20.05,\"feels_like\":20.02,\"temp_min\":20.05,\"temp_max\":20.05,\"pressure\":1013,\"humidity\":73},\"visibility\":10000,\"wind\":{\"speed\":0,\"deg\":0},\"clouds\":{\"all\":40},\"dt\":1628017984,\"sys\":{\"type\":1,\"id\":8975,\"country\":\"RU\",\"sunrise\":1628035661,\"sunset\":1628092381},\"timezone\":18000,\"id\":1508291,\"name\":\"Челябинск\",\"cod\":200}";
         }
+
+        static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        {
+            if (update.Message is Message message)
+            {
+                await botClient.SendTextMessageAsync(message.Chat, "Hello");
+            }
+        }
+
+        static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        {
+            if (exception is ApiRequestException apiRequestException)
+            {
+                await botClient.SendTextMessageAsync(123, apiRequestException.ToString());
+            }
+        }
+
     }
 }

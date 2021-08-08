@@ -8,6 +8,7 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
 {
     class WeatherRespondNow:WeatherResponse, IWeatherParser
     {
+        public Coodr Coord { get; set; }
         public Weather[] Weather { get; set; }
         public Main Main { get; set; }
         public Wind Wind { get; set; }
@@ -27,6 +28,13 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
                    $"минимальная {Main.Temp_min}";
         }
     }
+
+    public class Coodr
+    {
+        public float Lon { get; set; }
+        public float Lat { get; set; }
+    }
+
     public class Main
     {
         public float Temp { get; set; }

@@ -21,6 +21,7 @@ namespace TelegramMyFirstBot.Model.Weather
         {
             requestParam = new Dictionary<string, string>(3);
             requestParam.Add("Сейчас", "https://api.openweathermap.org/data/2.5/weather?q=");
+
             requestParam.Add("16 days", "https://api.openweathermap.org/data/2.5/forecast?q=");
         }
         public string CreationDataRequestWithParam(string city, string param)

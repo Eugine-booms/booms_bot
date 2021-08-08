@@ -26,6 +26,7 @@ namespace TelegramMyFirstBot.Model
             this.ChatId = chatID;
             this.Username = username;
         }
+
         public string CreateWeatherAnswer()
         {
             var request= requestSerwer.CreationDataRequestWithParam(WeatherCitySelection, WeatherTypeSelection);
