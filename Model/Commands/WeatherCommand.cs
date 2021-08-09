@@ -7,14 +7,13 @@ namespace TelegramMyFirstBot.Model.Commands
     {
         public override  string[] Name { get; } = new string[] { "/Погода", "/погод", "/weather"};
 
-        public override async void Execute(Message message, TelegramBotClient client)
+        public override void Execute(Message message, TelegramBotClient client)
         {
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
 
             WeatherRequestFromUser weatherRequest=new WeatherRequestFromUser(message.Chat.Id, message.From.Username);
             Bot.userRequests.Add(weatherRequest);
-           // await weatherRequest.WeatherUserDialogAsync(message);
         }
 
     }

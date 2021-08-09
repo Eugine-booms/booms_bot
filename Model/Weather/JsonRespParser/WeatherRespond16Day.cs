@@ -26,6 +26,22 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public Coodr Coodr { get; set; }
+        public City()
+        {
+            Coodr = new Coodr();
+        }
+        public Coodr CityGetCoord()
+        {
+            RequestToWeatherSerwer coordRequest = new RequestToWeatherSerwer();
+            var urlRequest= coordRequest.CreationDataRequestToOpenWeatherWithParam(this, "Сейчас");
+            var answer = coordRequest.SendDataRequestToServer(urlRequest);
+            WeatherRespondNow temp= WeatherRequestFromUser.ConvertFromJSON<WeatherRespondNow>(answer);
+            Coodr.Lat = temp.Coord.Lat;
+            Coodr.Lon = temp.Coord.Lon;
+            return this.Coodr;
+        }
+
     }
 
     public class WeatherArray
