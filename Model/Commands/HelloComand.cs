@@ -5,7 +5,7 @@ namespace TelegramMyFirstBot.Model.Commands
 {
     public class HelloComand : Command
     {
-        public override string[] Name { get; } = new string[] { "hello", "Привет", "дарова", "здорова" };
+        public override string[] Name { get; } = new string[] { "/hello", "Привет", "/дарова", "/здорова" };
 
         public override async void Execute(Message message, TelegramBotClient client)
         {

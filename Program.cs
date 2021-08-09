@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Args;
+using Telegram.Bot.Exceptions;
+using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Types;
 using TelegramMyFirstBot.Model.Commands;
 
 namespace TelegramMyFirstBot
@@ -10,11 +14,11 @@ namespace TelegramMyFirstBot
         static void Main(string[] args)
         {
             Bot.Init();
-            var client = Bot.GetClient();
-            client.StartReceiving();   // начинаем слушать входящие сообщения
-            client.OnMessage += Bot.OnMessageHandler;
+            Bot.Client.StartReceiving();
+            Bot.Client.OnMessage += Bot.OnMessageHandler;
             Console.ReadLine();
-            client.StopReceiving();
+            Bot.Client.StopReceiving();
+
         }
     }
 }
