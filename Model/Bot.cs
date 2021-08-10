@@ -12,6 +12,8 @@ namespace TelegramMyFirstBot.Model.Commands
         public static List<WeatherRequestFromUser> userRequests = new List<WeatherRequestFromUser>();
         public static TelegramBotClient Client { get; private set; }
         private static List<Command> commandsList;
+        //private static List<Command> actionList;
+        //public static IReadOnlyList<>
         public static IReadOnlyList<Command> Commands => commandsList.AsReadOnly();
         private static void UserRequestAndCleaner ()
         {
