@@ -45,12 +45,11 @@ namespace TelegramMyFirstBot.Model.Weather
                 {
                     response = streamReader.ReadToEnd();
                 }
-                File.WriteAllText(@"response.json", response);
             }
             catch (System.Net.WebException)
             {
                 Console.WriteLine("Возникло исключение класс RequestToWeatherSerwer");
-                return "ошибка интернета";
+                return response= "Возникло исключение класс RequestToWeatherSerwer";
             }
             return response;
         }

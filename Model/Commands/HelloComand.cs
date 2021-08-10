@@ -1,5 +1,6 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramMyFirstBot.Model.Commands
 {
@@ -14,7 +15,7 @@ namespace TelegramMyFirstBot.Model.Commands
 
             //TODO: Command logic -_-
 
-           await client.SendTextMessageAsync(chatId, "Hello!", replyToMessageId: messageId);
+           await client.SendTextMessageAsync(chatId, "Hello!", replyToMessageId: messageId, replyMarkup: new ReplyKeyboardRemove());
         }
     }
 
