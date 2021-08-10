@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
 {
-    
+
     class YandexWeatherResponse : WeatherResponse, IWeatherParser
     {
         public string GeneratesTextResponseForTheUser()
@@ -19,6 +19,7 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
             }
             return answer;
         }
+        
             public int now { get; set; }
             public DateTime now_dt { get; set; }
             public Info info { get; set; }
@@ -26,8 +27,7 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
             public Yesterday yesterday { get; set; }
             public Fact fact { get; set; }
             public Forecast[] forecasts { get; set; }
-    }
-
+        }
         public class Info
         {
             public bool n { get; set; }
@@ -47,7 +47,6 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
             public bool f { get; set; }
             public bool _h { get; set; }
         }
-
         public class Tzinfo
         {
             public string name { get; set; }
@@ -55,7 +54,6 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
             public bool dst { get; set; }
             public int offset { get; set; }
         }
-
         public class Geo_Object
         {
             public District district { get; set; }
@@ -104,7 +102,7 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
             public int cloudness { get; set; }
             public int prec_type { get; set; }
             public int prec_prob { get; set; }
-            public int prec_strength { get; set; }
+            public float prec_strength { get; set; }
             public bool is_thunder { get; set; }
             public float wind_speed { get; set; }
             public string wind_dir { get; set; }
@@ -124,7 +122,7 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
 
         public class Accum_Prec
         {
-            public float _1 { get; set; }
+            public int _1 { get; set; }
             public float _3 { get; set; }
             public float _7 { get; set; }
         }
@@ -147,12 +145,40 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
 
         public class Parts
         {
+            public Evening evening { get; set; }
             public Morning morning { get; set; }
             public Night_Short night_short { get; set; }
             public Day_Short day_short { get; set; }
             public Night night { get; set; }
             public Day day { get; set; }
-            public Evening evening { get; set; }
+        }
+
+        public class Evening
+        {
+            public string _source { get; set; }
+            public int temp_min { get; set; }
+            public int temp_avg { get; set; }
+            public int temp_max { get; set; }
+            public float wind_speed { get; set; }
+            public float wind_gust { get; set; }
+            public string wind_dir { get; set; }
+            public int pressure_mm { get; set; }
+            public int pressure_pa { get; set; }
+            public int humidity { get; set; }
+            public int soil_temp { get; set; }
+            public float soil_moisture { get; set; }
+            public float prec_mm { get; set; }
+            public int prec_prob { get; set; }
+            public int prec_period { get; set; }
+            public float cloudness { get; set; }
+            public int prec_type { get; set; }
+            public float prec_strength { get; set; }
+            public string icon { get; set; }
+            public string condition { get; set; }
+            public int uv_index { get; set; }
+            public int feels_like { get; set; }
+            public string daytime { get; set; }
+            public bool polar { get; set; }
         }
 
         public class Morning
@@ -265,34 +291,6 @@ namespace TelegramMyFirstBot.Model.Weather.JsonRespParser
         }
 
         public class Day
-        {
-            public string _source { get; set; }
-            public int temp_min { get; set; }
-            public int temp_avg { get; set; }
-            public int temp_max { get; set; }
-            public float wind_speed { get; set; }
-            public float wind_gust { get; set; }
-            public string wind_dir { get; set; }
-            public int pressure_mm { get; set; }
-            public int pressure_pa { get; set; }
-            public int humidity { get; set; }
-            public int soil_temp { get; set; }
-            public float soil_moisture { get; set; }
-            public float prec_mm { get; set; }
-            public int prec_prob { get; set; }
-            public int prec_period { get; set; }
-            public float cloudness { get; set; }
-            public int prec_type { get; set; }
-            public float prec_strength { get; set; }
-            public string icon { get; set; }
-            public string condition { get; set; }
-            public int uv_index { get; set; }
-            public int feels_like { get; set; }
-            public string daytime { get; set; }
-            public bool polar { get; set; }
-        }
-
-        public class Evening
         {
             public string _source { get; set; }
             public int temp_min { get; set; }
