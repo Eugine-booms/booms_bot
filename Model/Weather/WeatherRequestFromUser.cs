@@ -13,7 +13,7 @@ namespace TelegramMyFirstBot.Model
     public class WeatherRequestFromUser
     {
         public int Step { get; set; } = 0;
-        private RequestToWeatherSerwer requestSerwer;
+        //private RequestToServer requestServer;
         public ChatId ChatId { get; set; }
         public string Username { get; set; }
         protected string WeatherTypeSelection { get; set; }
@@ -27,7 +27,6 @@ namespace TelegramMyFirstBot.Model
         public static  IWeatherParser ConvertFromJSON <IWeatherParser> (string answer)
         {
             IWeatherParser weather;
-          //  System.IO.File.WriteAllText(@"answer.json", answer);
             weather = JsonConvert.DeserializeObject<IWeatherParser>(answer);
             return weather;
         }
@@ -35,18 +34,29 @@ namespace TelegramMyFirstBot.Model
         public string CreateWeatherAnswer()
         {
             IWeatherParser weather;
-            var requestData = requestSerwer.CreationDataRequestToOpenWeatherWithParam(City, WeatherTypeSelection);
-            var serverAnswerString = requestSerwer.SendDataRequestToServer(requestData);
-            if (serverAnswerString == "Возникло исключение класс RequestToWeatherSerwer")
-                return "Шеф, это провал! У нас ошибка запроса на сервер";
+            //var pingRequestServer = new RequestToOpenWeatherServer();
+            //var pingRequestData = pingRequestServer.CreationDataToRequestWithParam(City, WeatherTypeSelection);
+            
             if (WeatherTypeSelection == "Сейчас")
+            {
+                var requestServer = new RequestToOpenWeatherServer();
+                var requestData = requestServer.CreationDataToRequestWithParam(City, WeatherTypeSelection);
+                var serverAnswerString = requestServer.SendDataRequestToServer(requestData);
+                if (serverAnswerString == "ошибка интернета")
+                    return "Шеф, это провал! У нас ошибка запроса на сервер";
                 weather = ConvertFromJSON<WeatherRespondNow>(serverAnswerString);
+            }
             else
              if (WeatherTypeSelection == "7 days")
             {
                 var requestServer = new RequestToYandexWeatherServer();
+                City.GetСoordinates();
+                if (City.Coodr.Lat<0||City.Coodr.Lon<0)
+                    return $"Сам ты {City.Name}";
                 var requestData = requestServer.CreationDataToRequestWithParam(City, null);
                 var serverAnswerString = requestServer.SendDataRequestToServer(requestData);
+                if (serverAnswerString == "ошибка интернета")
+                    return "Шеф, это провал! У нас ошибка запроса на сервер";
                 weather = ConvertFromJSON<YandexWeatherResponse>(serverAnswerString);
             }
             else
@@ -55,50 +65,29 @@ namespace TelegramMyFirstBot.Model
                 var requestServer = new RequestToOpenWeatherServer();
                 var requestData = requestServer.CreationDataToRequestWithParam(City, WeatherTypeSelection);
                 var serverAnswerString = requestServer.SendDataRequestToServer(requestData);
+                if (serverAnswerString == "ошибка интернета")
+                    return "Шеф, это провал! У нас ошибка запроса на сервер";
                 weather = JsonConvert.DeserializeObject<WeatherRespond16Day>(serverAnswerString);
+            }
             else weather = new WeatherRespondNow();
-            return weather.GeneratesTextResponseForTheUser();
+                return weather.GeneratesTextResponseForTheUser();
+             
         }
-        private void AnswerToUser(Message msg)
+        public void AnswerToUser(Message msg)
         {
             Bot.Client.SendTextMessageAsync(ChatId, CreateWeatherAnswer(), replyToMessageId: msg.MessageId, replyMarkup: Bot.ReturnStartSetOfButtons());
         }
         //public static async void OnMessageHandler(object sender, MessageEventArgs incoming)
        public async void OnCallbackQueryDialog (object sc, Telegram.Bot.Args.CallbackQueryEventArgs ev) 
-        {
-            if (ev.CallbackQuery.From.Username != Username)
-                return;
+        { 
             var message = ev.CallbackQuery.Message;
             Console.WriteLine($"[log]: OnCallbackQuery {message.Type} от : {ev.CallbackQuery.From.FirstName} с текстом {message.Text}");
-            if (ev.CallbackQuery.Data == "Сейчас")
-            {
-                WeatherTypeSelection = "Сейчас";
-                Step++;
-                await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id); // отсылаем пустое, чтобы убрать "частики" на кнопке
-                var keyboard = new ForceReplyMarkup();
-                keyboard.Selective = true;
-                await Bot.Client.SendTextMessageAsync(message.Chat.Id, "В каком городе?", replyToMessageId: message.MessageId, replyMarkup: new ForceReplyMarkup());
-                //await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id);
-                //await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id, "В каком городе?", true);
-            }
-            else
-            if (ev.CallbackQuery.Data == "7 days")
-            {
-                WeatherTypeSelection = "7 days";
-                Step++;
-                //await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id, "В каком городе?", true);
-                await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id); // отсылаем пустое, чтобы убрать "частики" на кнопке
-                await Bot.Client.SendTextMessageAsync(message.Chat.Id, "В каком городе?", replyToMessageId: message.MessageId, replyMarkup: new ForceReplyMarkup());
-
-            }
-            else
-                if (ev.CallbackQuery.Data == "16 days")
-            {
-                WeatherTypeSelection = "16 days";
-                Step++;
-                await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id); // отсылаем пустое, чтобы убрать "частики" на кнопке
-                await Bot.Client.SendTextMessageAsync(message.Chat.Id, "В каком городе?", replyToMessageId: message.MessageId, replyMarkup: new ForceReplyMarkup());
-            }
+            if (ev.CallbackQuery.From.Username != Username)
+                return;
+            WeatherTypeSelection = ev.CallbackQuery.Data;
+            Step++;
+            await Bot.Client.AnswerCallbackQueryAsync(ev.CallbackQuery.Id); // отсылаем пустое, чтобы убрать "частики" на кнопке
+            await Bot.Client.SendTextMessageAsync(message.Chat.Id, "В каком городе?", replyToMessageId: message.MessageId, replyMarkup: new ForceReplyMarkup());
         }
         public async Task WeatherUserDialogAsync(Message msg)
         {

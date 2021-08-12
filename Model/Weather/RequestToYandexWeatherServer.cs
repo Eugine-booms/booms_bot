@@ -14,9 +14,9 @@ namespace TelegramMyFirstBot.Model.Weather
 
         public override WebRequest CreationDataToRequestWithParam(City city, string param)
         {
-            var coordOfCity = city.GetСoordinates(city.Name);
-            string url = $"https://api.weather.yandex.ru/v2/forecast?lat=" + coordOfCity.Lat + "&lon" + coordOfCity.Lon + "&limit=7";
-            WebRequest request = WebRequest.Create(url);
+            
+            string url = $"https://api.weather.yandex.ru/v2/forecast?lat=" + city.Coodr.Lat + "&lon" + city.Coodr.Lon + "&limit=7";
+            var request = WebRequest.Create(url);
             request.Headers.Add(ApiID);
             return request;
         }
