@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,7 @@ namespace TelegramMyFirstBot.Model
     public class WeatherRequestFromUser
     {
         int step = 0;
-        private RequestToWeatherSerwer requestSerwer;
+        //private RequestToServer requestSerwer;
         public ChatId ChatId { get; set; }
         public string Username { get; set; }
         protected string WeatherTypeSelection { get; set; }
@@ -26,7 +27,6 @@ namespace TelegramMyFirstBot.Model
         protected City City {get; set;}
         public WeatherRequestFromUser(ChatId chatID, string username)
         {
-            requestSerwer = new RequestToWeatherSerwer();
             City = new City();
             this.ChatId = chatID;
             this.Username = username;
@@ -34,7 +34,12 @@ namespace TelegramMyFirstBot.Model
         public static  IWeatherParser ConvertFromJSON <IWeatherParser> (string answer)
         {
             IWeatherParser weather;
-            weather= JsonConvert.DeserializeObject<IWeatherParser>(answer);
+            System.IO.File.WriteAllText(@"answer.json", answer);
+            dynamic json = JObject.Parse(answer);
+            string city = json.name;
+            string temp = json.description;
+            string temp1 = json.weather[0].description;
+            weather = JsonConvert.DeserializeObject<IWeatherParser>(answer);
             return weather;
         }
 
@@ -43,22 +48,25 @@ namespace TelegramMyFirstBot.Model
             IWeatherParser weather;
             if (WeatherTypeSelection == "Сейчас")
             {
-                var requestData = requestSerwer.CreationDataRequestToOpenWeatherWithParam(City, WeatherTypeSelection);
-                var serverAnswerString = requestSerwer.SendDataRequestToServer(requestData);
+                var requestServer = new RequestToOpenWeatherServer();
+                var requestData = requestServer.CreationDataToRequestWithParam(City, WeatherTypeSelection);
+                var serverAnswerString = requestServer.SendDataRequestToServer(requestData);
                 weather = ConvertFromJSON<WeatherRespondNow>(serverAnswerString);
             }
             else
              if (WeatherTypeSelection == "7 days")
             {
-                var requestData = requestSerwer.CreationDataRequestToYandexWithParam(City);
-                var serverAnswerString = requestSerwer.SendDataRequestToServer(requestData);
+                var requestServer = new RequestToYandexWeatherServer();
+                var requestData = requestServer.CreationDataToRequestWithParam(City, null);
+                var serverAnswerString = requestServer.SendDataRequestToServer(requestData);
                 weather = ConvertFromJSON<YandexWeatherResponse>(serverAnswerString);
             }
             else
             if (WeatherTypeSelection == "16 days")
             {
-                var requestData = requestSerwer.CreationDataRequestToOpenWeatherWithParam(City, WeatherTypeSelection);
-                var serverAnswerString = requestSerwer.SendDataRequestToServer(requestData);
+                var requestServer = new RequestToOpenWeatherServer();
+                var requestData = requestServer.CreationDataToRequestWithParam(City, WeatherTypeSelection);
+                var serverAnswerString = requestServer.SendDataRequestToServer(requestData);
                 weather = JsonConvert.DeserializeObject<WeatherRespond16Day>(serverAnswerString);
             }
             else weather = new WeatherRespondNow();

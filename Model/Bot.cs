@@ -32,7 +32,8 @@ namespace TelegramMyFirstBot.Model.Commands
             {
                 foreach (var command in commandsList)
                 {
-                    if (command.Contains(incoming.Message.Text.ToLower()))
+                    //var a = incoming.Message.Text.ToLower().Split(' ');
+                    if (command.Contains(incoming.Message.Text.ToLower().Split(' ')[0]))
                     {
                         command.Execute(incoming.Message, Client);
                         break;
@@ -47,9 +48,9 @@ namespace TelegramMyFirstBot.Model.Commands
                     
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("[err]Возникло исключение сообщение боту");
+                Console.WriteLine("[err]Возникло исключение сообщение боту" + e.ToString());
             }
         }
         public static IReplyMarkup ReturnStartSetOfButtons()
@@ -82,33 +83,8 @@ namespace TelegramMyFirstBot.Model.Commands
             commandsList.Add(new WeatherCommand());
             commandsList.Add(new StickerCommand());
             commandsList.Add(new ImageCommand());
-
+            commandsList.Add(new TranslateComand());
             //TODO: Add more commands
-
-            //JObject jObject = JObject.Parse(jsonText);
-            //Dictionary<string, List<Order>> dict =
-            //    jObject.ToObject<Dictionary<string, List<Order>>>();
-
-            //Dictionary<string, List<Order>> JsonObject = JsonConvert.DeserializeObject<Dictionary<string, List<Order>>>(jsonText);
-            //List<string> Json_Array = JsonConvert.DeserializeObject<List<string>>(jsonText);
-            //string a= "{\"coord\":{\"lon\":61.4297,\"lat\":55.1544},\"weather\":[{\"id\":802,\"main\":\"Clouds\",\"description\":\"переменная облачность\",\"icon\":\"03n\"}],\"base\":\"stations\",\"main\":{\"temp\":20.05,\"feels_like\":20.02,\"temp_min\":20.05,\"temp_max\":20.05,\"pressure\":1013,\"humidity\":73},\"visibility\":10000,\"wind\":{\"speed\":0,\"deg\":0},\"clouds\":{\"all\":40},\"dt\":1628017984,\"sys\":{\"type\":1,\"id\":8975,\"country\":\"RU\",\"sunrise\":1628035661,\"sunset\":1628092381},\"timezone\":18000,\"id\":1508291,\"name\":\"Челябинск\",\"cod\":200}";
         }
-
-        static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-        {
-            if (update.Message is Message message)
-            {
-                await botClient.SendTextMessageAsync(message.Chat, "Hello");
-            }
-        }
-
-        static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-        {
-            if (exception is ApiRequestException apiRequestException)
-            {
-                await botClient.SendTextMessageAsync(123, apiRequestException.ToString());
-            }
-        }
-
     }
 }
