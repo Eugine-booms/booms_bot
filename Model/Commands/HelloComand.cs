@@ -1,5 +1,6 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramMyFirstBot.Model.Commands
 {
@@ -11,10 +12,10 @@ namespace TelegramMyFirstBot.Model.Commands
         {
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
-
-            //TODO: Command logic -_-
-
-           await client.SendTextMessageAsync(chatId, "Hello!", replyToMessageId: messageId);
+            if(message.From.FirstName.Contains("booms"))
+                await client.SendTextMessageAsync(chatId, "Здравствуй, хозяин!", replyToMessageId: messageId);
+            else
+            await client.SendTextMessageAsync(chatId, "Hello!", replyToMessageId: messageId);
         }
     }
 
